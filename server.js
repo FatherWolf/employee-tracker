@@ -1,24 +1,38 @@
-const express = require('express');
-const inquirer = require('inquirer');
-const mysql = require('mysql2');
-require('console.table')
+const inquirer = require("inquirer");
+const mysql = require("mysql2");
 
-const PORT = process.env.PORT || 3001;
-const app = express();
-
-// Express middleware
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
-
-// Connect to database
 const db = mysql.createConnection(
   {
-    host: 'localhost',
-    // MySQL username,
-    user: 'root',
-    // TODO: Add MySQL password here
-    password: '',
-    database: 'employees_db'
+    user: "root",
+    database: "employees_db",
   },
-  console.log(`Connected to the employees_db database.`)
+  'Connected to the employees_db database.'
 );
+
+inquirer
+  .prompt([
+    {
+      type: "list",
+      message: "Select Option",
+      name: "select",
+      choices: [
+        "view all employees",
+        "view all roles",
+        "view all departments",
+        "exit",
+      ],
+    },
+  ])
+  .then((answer) => {
+    switch (answer.selection) {
+      case "view all employees": {
+        db.query('SELECT * FROM employee')
+      }
+      case "view all roles": {
+      }
+      case "view all departments": {
+      }
+      default:
+        return process.exit();
+    }
+  });
