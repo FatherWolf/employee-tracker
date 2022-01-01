@@ -24,7 +24,7 @@ CREATE TABLE role (
   CONSTRAINT fk_department FOREIGN KEY (department_id) REFERENCES department(id) ON DELETE CASCADE  
 );
 
-CREATE TABLE role (
+CREATE TABLE employee (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   first_name VARCHAR(30) NOT NULL,
   last_name VARCHAR(30) NOT NULL,
@@ -37,18 +37,5 @@ CREATE TABLE role (
 );
 
 
-
-
-
-
-
-CREATE TABLE employee (
-  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  first_name VARCHAR(30) NOT NULL,
-  last_name VARCHAR(30) NOT NULL,
-  role_id INT,
-  manager_id INT,
-  FOREIGN KEY (role_id) REFERENCES role(id)
-);
 /* constraint fk department 
 index dep ind(department_id) */
