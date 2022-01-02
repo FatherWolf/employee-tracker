@@ -6,7 +6,7 @@ const db = mysql.createConnection(
     user: "root",
     database: "employees_db",
   },
-  "Connected to the employees_db database."
+  "Connected to the employees_db database"
 );
 
 const start = () => {
