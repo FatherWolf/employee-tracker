@@ -18,3 +18,11 @@ VALUES
 ('Sales Agent', 75000, 2)
 ('HR Manger', 95000, 3)
 ('HR', 50000, 3)
+
+INSERT INTO employee
+(first_name, last_name, role_id, manager_id)
+VALUES
+('Austin', 'Engle', 2, 1)
+('Zeus', 'Almighty', 5, null)
+('Ray', 'John', 1, null)
+('Victoria', 'Belle', 2, 3)

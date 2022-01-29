@@ -1,4 +1,4 @@
-USE employees_db;
+/* USE employees_db;
 
 SELECT 
 CONCAT(employee.first_name," ",employee.last_name) AS employee_name,
@@ -8,4 +8,4 @@ FROM employee manager
 RIGHT JOIN employee
 ON manager.id = employee.manager_id
 INNER JOIN role
-ON role.id = employee.role_id;
+ON role.id = employee.role_id; */
