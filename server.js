@@ -6,74 +6,79 @@ const db = mysql.createConnection(
     user: "root",
     database: "employees_db",
   },
-  "Connected to the employees_db database"
+  
 );
 
 function init() {
+  try {
+    inquirer
+      .prompt([
+        {
+          type: 'list',
+          message: 'Make a selection',
+          choices: ['View', 'Add'],
+          name: 'choices',
+        },
+        {
+          type: 'list',
+          message: 'Which Group of Employees?',
+          choices: ['department', 'role', 'employee'],
+          name: 'viewselection',
+          when: (selection) => selection.choices === 'View'
+        },
+        {
+          type: 'list',
+          message: 'What change would you like to make',
+          choices: ['role', 'department', 'employee'],
+          name: 'addselection',
+          when: (selection) => selection.choices === 'Add'
+        },
+        {
+          message: 'What is the department name?',
+          name: 'departmentname',
+          when: (selection) => selection.addselection === 'department'
+        }
 
-  inquirer
-    .prompt([
-      {
-        type: 'list',
-        message: 'Make a selection',
-        choices: ['View', 'Add'],
-        name: 'option',
-      },
-      {
-        type: 'list',
-        message: 'Which Group of Employees?',
-        choices: ['departments', 'roles', 'employees'],
-        name: 'viewselection',
-        when: (selection) => selection.option === 'View'
-      },
-      {
-        type: 'list',
-        message: 'What change would you like to make',
-        choices: ['role', 'department',  'employee'],
-        name: 'addselection',
-        when: (selection) => selection.option === 'Add'
-      },
-      {
-        message: 'What is the department name?',
-        name: 'departmentname',
-        when: (selection) => selection.addselection === 'department'
-      }
-      
-    ])
-    .then((selection) => {
-      const {option, viewselection, addselection, departmentname} = selection;
-      switch (selection) {
-        case 'View':
-          db.query(`SELECT * FROM ${viewselection};`, (err, results) => {
-            console.table(results)
-            init()
-          });
-          break;
-        case 'Add':
-          if (addselection === 'department') addDepartment(addselection, departmentname)
-          if (addselection === 'role') addrole(db);
-          if (addselection === 'employee') addemployee(db)
-          break;
-        case 'Add a role':
-          db.query('INSERT INTO roles (name) VALUES;', (err, results) => {
-            console.table(results)
-            init()
-          });
-          break;
-        case 'Add an employee':
-          db.query('INSERT INTO employees (name) VALUES;', (err, results) => {
-            console.table(results)
-            init()
-          });
-          break;
-        default:
-          break;
-      }
-    })
+      ])
+      .then((selection) => {
+       
+        const { choices, viewselection, addselection, departmentname } = selection;
+        switch (choices) {
+          case 'View':
+            db.query(`SELECT * FROM ${viewselection};`, (err, results) => {
+              console.log(results,)
+              init()
+            });
+            break;
+          case 'Add':
+            if (addselection === 'department') addDepartment(addselection, departmentname)
+            if (addselection === 'role') addrole(db);
+            if (addselection === 'employee') addemployee(db)
+            break;
+          case 'Add a role':
+            db.query('INSERT INTO roles (name) VALUES;', (err, results) => {
+              console.table(results)
+              init()
+            });
+            break;
+          case 'Add an employee':
+            db.query('INSERT INTO employees (name) VALUES;', (err, results) => {
+              console.table(results)
+              init()
+            });
+            break;
+          default:
+            process.exit();
+            break;
+        }
+      })
+  } catch (err) {
+    console.log(err)
+  }
 };
 
 function addDepartment(table, data) {
-  db.query(`INSERT INTO ${table}s (name) VALUES ("${data}")  ;`, (err, results) => {
+  db.query(`INSERT INTO ${table} (name) VALUES ("${data}")  ;`, (err, results) => {
     console.table(results)
     init()
   })
@@ -96,17 +101,21 @@ function addrole(db) {
       },
     ])
     .then((selection) => {
-      const {title , salary , id} = selection;
+      const { title, salary, id } = selection;
 
-      db.query(`INSERT INTO roles (title , salary , department_id) VALUES ('${title}' , ${salary} , ${id});`, (err, answers) => {
+      db.query(`INSERT INTO role (title , salary , department_id) VALUES ('${title}' , ${salary} , ${id});`, (err, answers) => {
         console.table(answers);
+        if (err) {
+          console.log(err)
+          }
+       
         init();
       })
     })
 };
 
 function addemployee() {
-    
+
 
   inquirer
     .prompt([
@@ -130,9 +139,9 @@ function addemployee() {
       }
     ])
     .then((answers) => {
-      const {firstName, lastName, roleid, Mid} = answers;
+      const { firstName, lastName, roleid, Mid } = answers;
 
-      db.query(`INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ('${firstName}' , '${lastName}' , ${roleid}, ${Mid});`, (err, results) => {
+      db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ('${firstName}' , '${lastName}' , ${roleid}, ${Mid});`, (err, results) => {
         console.table(results);
         init();
       })
@@ -143,8 +152,5 @@ function addemployee() {
 
 
 
-function run() {
-  init();
-}
 
-run();
+  init();
